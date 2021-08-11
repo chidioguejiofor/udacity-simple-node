@@ -1,7 +1,18 @@
 language: node_js
+
+node_js:
+  - 13
+
+services:
+  - docker
+
 before_script:
   - npm install -g gulp-cli
-script: echo "Here we go again"
+script: 
+  - docker --version
+  - docker build -t simple-node . 
+  - docker tag simple-node profchidi1/simple-node:latest
 
-after_script:
-  - echo "After the ragae run the script"
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push profchidi1/simple-node
